@@ -4,15 +4,16 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 
 import Connexion from './routes/Connexion'
 import Home from './routes/Home'
+import Page from './components/Page'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Connexion />,
+    element: <Page protectedPage={false} Content={Connexion} />,
   },
   {
     path: '/home',
-    element: <Home />
+    element: <Page protectedPage={true} Content={Home} />
   }
 ])
 

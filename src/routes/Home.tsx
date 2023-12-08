@@ -6,11 +6,18 @@ export default function Home() {
 
     useEffect(() => {
         const getAllGames = async () => {
-            // Récupérez les jeux gratuits avec la route GET /api/free-games
-            // Récupérez les jeux officiels avec la route /api/games/official
-            
-            // stockez-les dans le state freeGames
-            // stockez-les dans le state officialGames
+            const responses = await Promise.all([
+                fetch('http://localhost:1337/api/free-games'),
+                fetch('http://localhost:1337/api/official-games', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+            ])
+            const [freeGamesData, officialGamesData] = await Promise.all(responses.map(res => res.json()))
+            setFreeGames(freeGamesData)
+            setOfficialGames(officialGamesData)
         }
         getAllGames()
     }, [])
@@ -22,14 +29,25 @@ export default function Home() {
             <div className="free-games">
                 <h2>Jeux gratuits</h2>
                 <div className="free-games-list-content">
-                    {/* Affichez les jeux gratuits ici */}
+                    {freeGames.map((game: any) => (
+                        <div className="game-card" key={game.id}>
+                            <img src={game.image} alt={game.name} />
+                            <p>{game.name}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
 
             <div className="official-games">
                 <h2>Jeux officiels</h2>
                 <div className="official-games-list-content">
-                    {/* Affichez les jeux officiels ici */}
+                    {officialGames.map((game: any) => (
+                        <div className="game-card" key={game.id}>
+                            <img src={game.image} alt={game.name} />
+                            <p>{game.name}</p>
+                            <p>{game.price}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

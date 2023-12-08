@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface IPageProps {
     protectedPage: boolean;
@@ -6,13 +7,31 @@ interface IPageProps {
 }
 
 export default function Page({protectedPage, Content}: IPageProps) {
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if(protectedPage) {
-            // Vérifiez si l'utilisateur est connecté avec la route /api/users/me
-            
-            // Si l'utilisateur n'est pas connecté, redirigez-le vers la page de connexion
+        const checkIsConnected = async () => {
+            const token = localStorage.getItem('token')
+            if(!token) {
+                navigate('/?error=no-token')
+            }
+            try {
+            const response = await fetch('http://localhost:1337/api/users/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                await response.json()
+            }
+            catch(error) {
+                navigate('/?error=invalid-token')
+            }
         }
+        if(protectedPage) {
+            checkIsConnected()
+        }
+            
     }, [protectedPage]);
 
     return (
