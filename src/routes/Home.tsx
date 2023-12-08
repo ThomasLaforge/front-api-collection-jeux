@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function Home() {
     const [freeGames, setFreeGames] = useState([])
     const [officialGames, setOfficialGames] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         const getAllGames = async () => {
@@ -23,10 +24,16 @@ export default function Home() {
         getAllGames()
     }, [])
 
+    const handleLogout = () => {
+        localStorage.removeItem('token')
+        navigate('/')
+    }
+
     return (
         <div>
             <Link to="/change-password">Changer votre mot de passe</Link>
             <h1>Bienvenue dans votre collection de jeux</h1>
+            <a onClick={handleLogout}>Déconnexion</a>
 
             <div className="free-games">
                 <h2>Jeux gratuits</h2>
