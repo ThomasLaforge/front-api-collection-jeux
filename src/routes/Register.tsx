@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function Connexion() {
-    const [login, setLogin] = useState('')
+export default function Register() {
+    const [login, setLogin] = useState('thomas.lala@gmail.com')
+    const [username, setUsername] = useState('Toto')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
@@ -15,57 +16,48 @@ export default function Connexion() {
         setPassword(event.target.value)
     }, [])
 
-    const handleConnexion = useCallback(async () => {
-        const response = await fetch('http://localhost:1337/api/auth/local', {
+    const changeUsername = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(event.target.value)
+    }, [])
+
+    const handleRegister = useCallback(async () => {
+        const response = await fetch('http://localhost:1337/api/auth/local/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                identifier: login,
+                email: login,
+                username,
                 password
             })
         })
 
-        try {
-            const data = await response.json()
-            if(data.token){
-                localStorage.setItem('token', data.token)
-                navigate('/home')
-            }
-            else {
-                setErrorMessage('Identifiants incorrects')
-                setLogin('')
-                setPassword('')
-            }
+        if(response.ok) {
+            navigate('/?success=register')
         }
-        catch(error) {
-            setErrorMessage('Identifiants incorrects')
-            setLogin('')
+        else {
+            setErrorMessage('Vérifiez les informations saisies')
             setPassword('')
         }
-
     }, [login, password])
     return (
         <div>
-            <h1>Connexion</h1>
+            <h1>Créer votre compte</h1>
             <div className="form-field">
-                <label htmlFor="login">Entrez votre identifiant :</label>
+                <label htmlFor="login">Entrez votre email :</label>
                 <input type="text" name="login" value={login} onChange={changeLogin} />
+            </div>
+            <div className="form-field">
+                <label htmlFor="username">Entrez votre nom d'utilisateur :</label>
+                <input type="text" name="username" value={username} onChange={changeUsername} />
             </div>
             <div className="form-field">
                 <label htmlFor="password">Entrez votre mot de passe : </label>
                 <input type="password" name="password" value={password} onChange={changePassword} />
             </div>
             {errorMessage.length > 0 && <p className="error-message">{errorMessage}</p>}
-            <button onClick={handleConnexion}>Connexion</button>
-
-            <div className="register-link-zone">
-                <div className="register-info">Pas encore de compte ?</div>
-                <div className="register-link">
-                    <Link to={'/register'}>Créer un compte</Link>
-                </div>
-            </div>
+            <button onClick={handleRegister}>Connexion</button>
         </div>
     );
 }

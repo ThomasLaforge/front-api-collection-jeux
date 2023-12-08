@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Connexion from './routes/Connexion'
 import Home from './routes/Home'
 import Page from './components/Page'
+import Register from './routes/Register'
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: '/home',
     element: <Page protectedPage={true} Content={Home} />
+  },
+  {
+    path: '/register',
+    element: <Page protectedPage={false} Content={Register} />
   }
 ])
 
