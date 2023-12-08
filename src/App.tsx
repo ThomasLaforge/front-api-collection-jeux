@@ -6,6 +6,7 @@ import Connexion from './routes/Connexion'
 import Home from './routes/Home'
 import Page from './components/Page'
 import Register from './routes/Register'
+import ChangePassword from './routes/ChangePassword'
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <Page protectedPage={false} Content={Register} />
+  },
+  {
+    path: '/change-password',
+    element: <Page protectedPage={true} Content={ChangePassword} />
   }
 ])
 

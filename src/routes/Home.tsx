@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 export default function Home() {
     const [freeGames, setFreeGames] = useState([])
@@ -24,6 +25,7 @@ export default function Home() {
 
     return (
         <div>
+            <Link to="/change-password">Changer votre mot de passe</Link>
             <h1>Bienvenue dans votre collection de jeux</h1>
 
             <div className="free-games">
